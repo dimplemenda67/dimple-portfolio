@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/dimple-portfolio/static/css/main.e6c13ad2.css",
+    "main.js": "/dimple-portfolio/static/js/main.85b754d3.js",
+    "static/js/453.f8ca6e4a.chunk.js": "/dimple-portfolio/static/js/453.f8ca6e4a.chunk.js",
+    "index.html": "/dimple-portfolio/index.html",
+    "main.e6c13ad2.css.map": "/dimple-portfolio/static/css/main.e6c13ad2.css.map",
+    "main.85b754d3.js.map": "/dimple-portfolio/static/js/main.85b754d3.js.map",
+    "453.f8ca6e4a.chunk.js.map": "/dimple-portfolio/static/js/453.f8ca6e4a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.85b754d3.js"
+  ]
+}
