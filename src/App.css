@@ -1,38 +1,246 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF4060;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0E0E14;
+}
+
+a {
+  transition: opacity 0.2s;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ============ MOBILE OPTIMIZATIONS ============ */
+
+/* Navigation adjustments */
+@media (max-width: 1024px) {
+  nav {
+    padding: 0 12px !important;
+  }
+
+  nav div[style*="display: flex"] {
+    padding: 0 12px !important;
+  }
+
+  nav a:not([style*="background"]) {
+    font-size: 12px !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide nav links on mobile, show only logo and hire button */
+  nav {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+
+  nav div[style*="justify-content: space-between"] {
+    padding: 0 16px !important;
+    height: 56px !important;
+  }
+
+  /* Hide middle nav items */
+  nav a[href*="#"]:not([href*="mailto"]) {
+    display: none !important;
+  }
+
+  /* Hero section */
+  section#about > div {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding: 64px 16px 48px !important;
+  }
+
+  section#about h1 {
+    font-size: 36px !important;
+  }
+
+  section#about > div > div:last-child {
+    width: 100% !important;
+  }
+
+  section#about .tablet-hidden {
+    display: none !important;
+  }
+
+  /* Skills section grid */
+  section#skills div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  section#skills button {
+    font-size: 10px !important;
+    padding: 5px 12px !important;
+  }
+
+  /* Experience section */
+  section#experience div[style*="display: flex"][style*="gap: 28"] {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  section#experience div[style*="width: 40"] {
+    display: none !important;
+  }
+
+  section#experience div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  section#experience div[style*="position: absolute"][style*="left: 20"] {
+    display: none !important;
+  }
+
+  /* Projects section grid */
+  section#projects div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Contact section */
+  section#contact div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Footer */
+  footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+    padding: 16px 12px !important;
+  }
+
+  footer span {
+    font-size: 9px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  nav div[style*="justify-content: space-between"] {
+    padding: 0 12px !important;
+    height: 52px !important;
+  }
+
+  nav div:first-child {
+    gap: 8px !important;
+  }
+
+  nav div div:first-child {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
+  }
+
+  nav div div:first-child + span {
+    font-size: 13px !important;
+  }
+
+  section#about > div {
+    padding: 56px 12px 40px !important;
+  }
+
+  section#about h1 {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+  }
+
+  section#about p {
+    font-size: 13px !important;
+  }
+
+  section#about div[style*="display: flex"][style*="flexWrap"] {
+    gap: 6px !important;
+  }
+
+  section#about span[style*="fontSize: 11"] {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
+  }
+
+  section#about a {
+    font-size: 12px !important;
+    padding: 10px 20px !important;
+  }
+
+  section#skills,
+  section#experience,
+  section#projects,
+  section#contact {
+    padding: 48px 12px !important;
+  }
+
+  section h2 {
+    font-size: 24px !important;
+  }
+
+  section#contact div[style*="display: flex"][style*="gap: 16"] {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  section#contact span[style*="width: 76"] {
+    width: 60px !important;
+    font-size: 9px !important;
+  }
+
+  /* Responsive profile card */
+  div[style*="380px"] {
+    width: 100% !important;
+  }
+
+  /* Experience highlights on small mobile */
+  div[style*="grid-template-columns: 1fr 1fr"][style*="gap: 5px 20px"] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Contact CTA card buttons */
+  div[style*="display: flex"][style*="gap: 10"][style*="marginBottom: 26"] {
+    gap: 8px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Reduce padding in cards */
+  div[style*="padding: 26px"] {
+    padding: 20px !important;
+  }
+
+  div[style*="padding: 28px 26px"] {
+    padding: 20px !important;
+  }
+
+  div[style*="padding: 22px 26px"] {
+    padding: 16px !important;
+  }
+
+  div[style*="padding: 32px"] {
+    padding: 20px !important;
+  }
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

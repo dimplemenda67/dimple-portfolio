@@ -119,6 +119,20 @@ function useInView(ref) {
   return v;
 }
 
+function useResponsive() {
+  const [size, setSize] = useState({ width: typeof window !== 'undefined' ? window.innerWidth : 1024, isMobile: false, isTablet: false });
+  useEffect(() => {
+    const fn = () => {
+      const w = window.innerWidth;
+      setSize({ width: w, isMobile: w < 768, isTablet: w < 1024 });
+    };
+    window.addEventListener('resize', fn);
+    fn();
+    return () => window.removeEventListener('resize', fn);
+  }, []);
+  return size;
+}
+
 function SkillBar({ level, color, delay = 0 }) {
   const [w, setW] = useState(0);
   const ref = useRef();
@@ -142,13 +156,14 @@ function Chip({ label, accent }) {
 }
 
 function SectionHead({ line, eyebrow, title }) {
+  const { isMobile } = useResponsive();
   return (
-    <div style={{ marginBottom: 44 }}>
+    <div style={{ marginBottom: isMobile ? 32 : 44 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
         <div style={{ width: 26, height: 3, background: line, borderRadius: 2 }} />
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: C.muted, letterSpacing: 2.5, textTransform: "uppercase" }}>{eyebrow}</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: isMobile ? 9 : 10, color: C.muted, letterSpacing: 2.5, textTransform: "uppercase" }}>{eyebrow}</span>
       </div>
-      <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 32, color: C.text, margin: 0 }}>{title}</h2>
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: isMobile ? 24 : 32, color: C.text, margin: 0 }}>{title}</h2>
     </div>
   );
 }
@@ -157,6 +172,7 @@ const NAV = ["About", "Skills", "Experience", "Projects", "Contact"];
 const CATS = ["All", "Frontend", "AI Tools", "Architecture", "DevOps"];
 
 export default function Portfolio() {
+  const { isMobile, isTablet, width } = useResponsive();
   const [cat, setCat] = useState("All");
   const [copied, setCopied] = useState(false);
   const [active, setActive] = useState("about");
@@ -178,7 +194,11 @@ export default function Portfolio() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const W = { maxWidth: 1080, margin: "0 auto", padding: "0 44px" };
+  const W = { 
+    maxWidth: 1080, 
+    margin: "0 auto", 
+    padding: isMobile ? "0 16px" : isTablet ? "0 28px" : "0 44px" 
+  };
 
   return (
     <div style={{ background: C.bg, color: C.text, fontFamily: "'Outfit', sans-serif", minHeight: "100vh" }}>
@@ -201,17 +221,17 @@ export default function Portfolio() {
         background: "rgba(14,14,20,0.88)", backdropFilter: "blur(16px)",
         borderBottom: `1px solid ${C.border}`,
       }}>
-        <div style={{ ...W, display: "flex", justifyContent: "space-between", alignItems: "center", height: 60 }}>
+        <div style={{ ...W, display: "flex", justifyContent: "space-between", alignItems: "center", height: isMobile ? 52 : 60 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
-              width: 32, height: 32, borderRadius: 8, background: C.red,
+              width: isMobile ? 28 : 32, height: isMobile ? 28 : 32, borderRadius: 8, background: C.red,
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontWeight: 700, fontSize: 13, color: "white", letterSpacing: 0.5
+              fontWeight: 700, fontSize: isMobile ? 11 : 13, color: "white", letterSpacing: 0.5
             }}>DM</div>
-            <span style={{ fontWeight: 700, fontSize: 15, color: C.text }}>Dimple Menda</span>
+            {!isMobile && <span style={{ fontWeight: 700, fontSize: 15, color: C.text }}>Dimple Menda</span>}
           </div>
-          <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-            {NAV.map(n => (
+          <div style={{ display: "flex", gap: isMobile ? 0 : 32, alignItems: "center" }}>
+            {!isMobile && NAV.map(n => (
               <a key={n} href={`#${n.toLowerCase()}`} style={{
                 color: active === n.toLowerCase() ? C.red : C.muted,
                 fontSize: 13, textDecoration: "none", fontWeight: 500,
@@ -221,7 +241,7 @@ export default function Portfolio() {
             ))}
             <a href="mailto:dimplemenda67@gmail.com" style={{
               background: C.red, color: "white", borderRadius: 6,
-              padding: "7px 18px", fontSize: 13, fontWeight: 600, textDecoration: "none"
+              padding: isMobile ? "6px 14px" : "7px 18px", fontSize: isMobile ? 12 : 13, fontWeight: 600, textDecoration: "none"
             }}>Hire Me</a>
           </div>
         </div>
@@ -229,7 +249,7 @@ export default function Portfolio() {
 
       {/* HERO */}
       <section id="about" style={{ paddingTop: 60, position: "relative", zIndex: 1 }}>
-        <div style={{ ...W, display: "grid", gridTemplateColumns: "1fr 380px", gap: 64, alignItems: "center", padding: "80px 44px 72px" }}>
+        <div style={{ ...W, display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 380px", gap: isMobile ? 32 : 64, alignItems: "center", padding: isMobile ? "64px 16px 48px" : "80px 44px 72px" }}>
           <div>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 7,
@@ -240,7 +260,7 @@ export default function Portfolio() {
               <span style={{ fontSize: 11, color: C.subtle, fontFamily: "'JetBrains Mono', monospace", letterSpacing: 0.5 }}>Available for new opportunities</span>
             </div>
 
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: 56, lineHeight: 1.06, margin: "0 0 4px", color: C.text }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: isMobile ? 32 : 56, lineHeight: 1.06, margin: "0 0 4px", color: C.text }}>
               Dimple<br /><span style={{ color: C.red }}>Menda</span>
             </h1>
 
@@ -248,7 +268,7 @@ export default function Portfolio() {
               Senior Frontend Engineer · Technical Lead
             </p>
 
-            <p style={{ color: C.subtle, fontSize: 15, lineHeight: 1.85, maxWidth: 490, marginBottom: 30 }}>
+            <p style={{ color: C.subtle, fontSize: isMobile ? 13 : 15, lineHeight: 1.85, maxWidth: 490, marginBottom: 30 }}>
               8+ years engineering enterprise-grade web applications across healthcare and fintech. Deep expertise in{" "}
               <span style={{ color: C.text, fontWeight: 600 }}>Angular (2–18)</span>,{" "}
               <span style={{ color: C.text, fontWeight: 600 }}>RxJS</span>, and{" "}
@@ -261,16 +281,16 @@ export default function Portfolio() {
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: 12 }}>
+            <div style={{ display: "flex", gap: 12, flexWrap: isMobile ? "wrap" : "nowrap" }}>
               <a href="#contact" style={{ background: C.red, color: "white", borderRadius: 8, padding: "12px 28px", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>Get in Touch</a>
               <a href="#projects" style={{ background: "transparent", color: C.text, border: `1px solid ${C.border}`, borderRadius: 8, padding: "12px 28px", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>View Projects</a>
             </div>
           </div>
 
           {/* Profile card */}
-          <div style={{ background: C.surface, borderRadius: 18, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+          <div style={{ background: C.surface, borderRadius: 18, border: `1px solid ${C.border}`, overflow: "hidden", width: isMobile ? "100%" : "380px" }}>
             <div style={{ height: 4, background: `linear-gradient(90deg, ${C.red}, ${C.blue}, ${C.green})` }} />
-            <div style={{ padding: "28px 26px" }}>
+            <div style={{ padding: isMobile ? "20px 20px" : "28px 26px" }}>
               {/* Avatar row */}
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
                 <div style={{
@@ -335,7 +355,7 @@ export default function Portfolio() {
 
       {/* SKILLS */}
       <section id="skills" style={{ background: C.surface, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, position: "relative", zIndex: 1 }}>
-        <div style={{ ...W, padding: "68px 44px" }}>
+        <div style={{ ...W, padding: isMobile ? "48px 16px" : "68px 44px" }}>
           <SectionHead line={C.red} eyebrow="Technical Skills" title="What I work with" />
 
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 32 }}>
@@ -344,14 +364,14 @@ export default function Portfolio() {
                 background: cat === c ? C.red : "transparent",
                 color: cat === c ? "white" : C.muted,
                 border: `1px solid ${cat === c ? C.red : C.border}`,
-                borderRadius: 6, padding: "6px 16px", fontSize: 11, fontWeight: 600,
+                borderRadius: 6, padding: "6px 16px", fontSize: isMobile ? 10 : 11, fontWeight: 600,
                 cursor: "pointer", fontFamily: "'JetBrains Mono', monospace",
                 letterSpacing: 0.3, transition: "all 0.18s"
               }}>{c}</button>
             ))}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
             {filtered.map((s, i) => (
               <div key={s.name} style={{
                 background: C.card, border: `1px solid ${C.border}`, borderRadius: 10,
@@ -373,18 +393,18 @@ export default function Portfolio() {
 
       {/* EXPERIENCE */}
       <section id="experience" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ ...W, padding: "68px 44px" }}>
+        <div style={{ ...W, padding: isMobile ? "48px 16px" : "68px 44px" }}>
           <SectionHead line={C.blue} eyebrow="Experience" title="Where I've worked" />
           <div style={{ position: "relative" }}>
-            <div style={{ position: "absolute", left: 20, top: 0, bottom: 0, width: 1, background: C.border }} />
+            {!isMobile && <div style={{ position: "absolute", left: 20, top: 0, bottom: 0, width: 1, background: C.border }} />}
             {experiences.map((exp, i) => (
-              <div key={i} style={{ display: "flex", gap: 28, marginBottom: 20 }}>
-                <div style={{ flexShrink: 0, width: 40, paddingTop: 24 }}>
+              <div key={i} style={{ display: "flex", gap: 28, marginBottom: 20, flexDirection: isMobile ? "column" : "row" }}>
+                {!isMobile && <div style={{ flexShrink: 0, width: 40, paddingTop: 24 }}>
                   <div style={{ width: 11, height: 11, borderRadius: "50%", background: exp.accent, border: `2px solid ${C.bg}`, boxShadow: `0 0 0 2px ${exp.accent}`, marginLeft: 14 }} />
-                </div>
+                </div>}
                 <div style={{
                   flex: 1, background: C.surface, border: `1px solid ${C.border}`,
-                  borderRadius: 12, padding: "22px 26px", transition: "border-color 0.2s, box-shadow 0.2s", cursor: "default"
+                  borderRadius: 12, padding: isMobile ? "16px" : "22px 26px", transition: "border-color 0.2s, box-shadow 0.2s", cursor: "default"
                 }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = exp.accent + "60"; e.currentTarget.style.boxShadow = `0 4px 20px ${exp.accent}10`; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}
@@ -399,7 +419,7 @@ export default function Portfolio() {
                       <span style={{ fontSize: 11, color: C.muted, fontFamily: "'JetBrains Mono', monospace" }}>{exp.period}</span>
                     </div>
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5px 20px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? "8px" : "5px 20px" }}>
                     {exp.highlights.map((h, j) => (
                       <div key={j} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                         <div style={{ width: 4, height: 4, borderRadius: "50%", background: exp.accent, marginTop: 7, flexShrink: 0 }} />
@@ -416,9 +436,9 @@ export default function Portfolio() {
 
       {/* PROJECTS */}
       <section id="projects" style={{ background: C.surface, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, position: "relative", zIndex: 1 }}>
-        <div style={{ ...W, padding: "68px 44px" }}>
+        <div style={{ ...W, padding: isMobile ? "48px 16px" : "68px 44px" }}>
           <SectionHead line={C.green} eyebrow="Projects" title="Selected work" />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 18 }}>
             {projects.map((p, i) => (
               <div key={i} style={{
                 background: C.card, border: `1px solid ${C.border}`, borderRadius: 12,
@@ -450,11 +470,11 @@ export default function Portfolio() {
 
       {/* CONTACT */}
       <section id="contact" style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ ...W, padding: "68px 44px" }}>
+        <div style={{ ...W, padding: isMobile ? "48px 16px" : "68px 44px" }}>
           <SectionHead line={C.purple} eyebrow="Contact" title="Let's connect" />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40, alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 24 : 40, alignItems: "start" }}>
             <div>
-              <p style={{ color: C.subtle, fontSize: 15, lineHeight: 1.85, marginBottom: 32 }}>
+              <p style={{ color: C.subtle, fontSize: isMobile ? 13 : 15, lineHeight: 1.85, marginBottom: 32 }}>
                 Immediately available and open to Senior Frontend Engineer, Technical Lead, and Frontend Architect roles — ideally at product companies where I can drive architecture and mentor teams.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -464,23 +484,23 @@ export default function Portfolio() {
                   { label: "GitHub",   val: "github.com/dimplemenda67",     href: "https://github.com/dimplemenda67" },
                   { label: "Location", val: "Pune, Maharashtra, India",     href: null },
                 ].map(({ label, val, href }) => (
-                  <div key={label} style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                    <span style={{ width: 76, fontSize: 10, color: C.muted, fontFamily: "'JetBrains Mono', monospace", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>{label}</span>
+                  <div key={label} style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap" }}>
+                    <span style={{ width: isMobile ? "100%" : 76, fontSize: isMobile ? 9 : 10, color: C.muted, fontFamily: "'JetBrains Mono', monospace", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>{label}</span>
                     {href
-                      ? <a href={href} target="_blank" rel="noreferrer" style={{ color: C.text, fontSize: 13.5, fontWeight: 500, textDecoration: "none", borderBottom: `1px solid ${C.border}` }}>{val}</a>
-                      : <span style={{ color: C.subtle, fontSize: 13.5 }}>{val}</span>}
+                      ? <a href={href} target="_blank" rel="noreferrer" style={{ color: C.text, fontSize: isMobile ? 12 : 13.5, fontWeight: 500, textDecoration: "none", borderBottom: `1px solid ${C.border}` }}>{val}</a>
+                      : <span style={{ color: C.subtle, fontSize: isMobile ? 12 : 13.5 }}>{val}</span>}
                   </div>
                 ))}
               </div>
             </div>
 
             {/* CTA card */}
-            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, padding: "32px", overflow: "hidden", position: "relative" }}>
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, padding: isMobile ? "20px" : "32px", overflow: "hidden", position: "relative" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${C.red}, ${C.purple})` }} />
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 24, color: C.text, margin: "0 0 10px", lineHeight: 1.25 }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: isMobile ? 18 : 24, color: C.text, margin: "0 0 10px", lineHeight: 1.25 }}>
                 Ready to <span style={{ color: C.red }}>contribute</span> from day one.
               </h3>
-              <p style={{ color: C.muted, fontSize: 13, lineHeight: 1.8, marginBottom: 22 }}>
+              <p style={{ color: C.muted, fontSize: isMobile ? 12 : 13, lineHeight: 1.8, marginBottom: 22 }}>
                 With 8+ years of Angular expertise, a proven track record across enterprise products, and immediate availability — I can hit the ground running.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 26 }}>
@@ -492,20 +512,20 @@ export default function Portfolio() {
                 ].map(item => (
                   <div key={item} style={{ display: "flex", gap: 10, alignItems: "center" }}>
                     <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.red, flexShrink: 0 }} />
-                    <span style={{ fontSize: 13, color: C.subtle }}>{item}</span>
+                    <span style={{ fontSize: isMobile ? 12 : 13, color: C.subtle }}>{item}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div style={{ display: "flex", gap: 10, flexDirection: isMobile ? "column" : "row" }}>
                 <button onClick={copy} style={{
                   flex: 1, background: C.red, color: "white", border: "none",
-                  borderRadius: 8, padding: "12px 0", fontSize: 13, fontWeight: 700,
+                  borderRadius: 8, padding: "12px 0", fontSize: isMobile ? 12 : 13, fontWeight: 700,
                   cursor: "pointer", fontFamily: "'Outfit', sans-serif", transition: "opacity 0.2s"
                 }}>{copied ? "Copied!" : "Copy Email"}</button>
                 <a href="https://linkedin.com/in/dimple-menda" target="_blank" rel="noreferrer" style={{
                   flex: 1, background: "transparent", color: C.text,
                   border: `1px solid ${C.border}`, borderRadius: 8,
-                  padding: "12px 0", fontSize: 13, fontWeight: 600,
+                  padding: "12px 0", fontSize: isMobile ? 12 : 13, fontWeight: 600,
                   textDecoration: "none", textAlign: "center"
                 }}>LinkedIn</a>
               </div>
@@ -517,9 +537,9 @@ export default function Portfolio() {
       {/* FOOTER */}
       <footer style={{
         background: C.surface, borderTop: `1px solid ${C.border}`,
-        padding: "22px 44px", display: "flex", justifyContent: "space-between",
-        alignItems: "center", fontSize: 11, fontFamily: "'JetBrains Mono', monospace",
-        color: C.muted, position: "relative", zIndex: 1
+        padding: isMobile ? "16px 12px" : "22px 44px", display: "flex", justifyContent: isMobile ? "center" : "space-between",
+        alignItems: "center", fontSize: isMobile ? 9 : 11, fontFamily: "'JetBrains Mono', monospace",
+        color: C.muted, position: "relative", zIndex: 1, flexDirection: isMobile ? "column" : "row", gap: isMobile ? 8 : 0, textAlign: isMobile ? "center" : "left"
       }}>
         <span>© 2026 Dimple Menda</span>
         <span style={{ color: C.border }}>Built with React · Pune, India</span>
